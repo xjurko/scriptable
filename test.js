@@ -1,7 +1,7 @@
 let creds = importModule("creds")
 
 
-function distanceCrow(latFrom, longFrom, latTo, longTo) = {
+function distanceCrow(latFrom, longFrom, latTo, longTo) {
 	const R = 6371e3; // metres
 	const φ1 = lat1 * Math.PI/180; // φ, λ in radians
 	const φ2 = lat2 * Math.PI/180;
