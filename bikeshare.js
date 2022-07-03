@@ -34,13 +34,9 @@ async function boltVehicles(lat, lon) {
 
 	const url = `https://node.bolt.eu/rental-search/categoriesOverview?country=sk&gps_lat=${lat}&gps_lng=${lon}&device_os_version=iOS15.5&deviceId=60E3650B-071D-4DDA-AB99-EA22285B8F63&select_all=true&deviceType=iphone&lat=${lat}&language=en-GB&lng=${lon}&payment_method_id=PML6JXBPJ9C29X42&device_name=iPhone14,4&session_id=34730400u1656838818&version=CI.59.0&user_id=34730400&payment_method_type=adyen`;
 
-	console.log(url);
-
 
 	const req = new Request(url);
 	req.headers = headers;
-
-	console.log(req);
 
 	const resp = await req.loadJSON();
 
@@ -49,7 +45,6 @@ async function boltVehicles(lat, lon) {
 	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["lat"], v["lng"])})) ;
 
 	distances.sort((a,b) => a["dist"] > b["dist"])
-	console.log(distances);
 	return distances;
 }
 
@@ -98,10 +93,32 @@ async function nextBikeVehicles(lat, lon) {
 
 Location.setAccuracyToTenMeters();
 const loc = await Location.current();
-// const distances = await boltVehicles(loc['latitude'], loc['longitude'])
-const distances = await nextBikeVehicles(loc['latitude'], loc['longitude'])
+const distancesNextBike = await nextBikeVehicles(loc['latitude'], loc['longitude'])
+const distancesBolt = await boltVehicles(loc['latitude'], loc['longitude'])
 
-console.log(distances)
+
+async function createWidget(distancesBolt, distancesNextBike) {
+  const bgColor = new Color("#222222")
+  let listwidget = new ListWidget();
+  listwidget.spacing = 2
+  const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
+  const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
+
+  // Return the created widget
+  return listwidget;
+}
+
+
+if (config.runsInWidget) {
+	widget = createWidget()
+	Script.setWidget(widget);
+else {
+	console.log(distancesBolt[0])
+	console.log(distancesNextBike[0])
+	widget.presentSmall()
+}
+
+Script.complete()
 
 
 
