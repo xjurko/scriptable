@@ -1,4 +1,4 @@
-importModule(creds)
+let creds = importModule("creds")
 
 let x = 5
 
