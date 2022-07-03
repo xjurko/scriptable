@@ -53,13 +53,53 @@ async function boltVehicles(lat, lon) {
 	return distances;
 }
 
-const latFrom = 49.20053758427728;
-const longfrom = 16.595202877658718;
-const distances = boltVehicles(latFrom, longFrom)
+
+async function nextBikeVehicles() {
+
+	const headers = {
+		"host": "api.nextbike.net",
+		"connection": "keep-alive",
+		"accept": "*/*",
+		"user-agent": "Nextbike/4.8.10 (net.nextbike.official2012; build:228; iOS 15.5.0) Alamofire/4.8.10",
+		"accept-language": "en-SK;q=1.0",
+		"accept-encoding": "gzip;q=1.0, compress;q=0.5"
+	};
 
 
-let loc = Location.current();
-console.log(loc)
+	const url = `https://api.nextbike.net/maps/nextbike-live.xml?apikey=${creds.nextbike}&city=660&include_domains=te&response_type=xml&show_errors=1`;
+
+	console.log(url);
+
+
+	const req = new Request(url);
+	req.headers = headers;
+
+
+	const vehicles = []
+	
+	const resp = await req.loadString();
+	const parser = new XMLParser(resp)
+
+	parser.didStartElement((nodeName, params) => {
+		if (nodeName == 'bike') {
+			vehicles.append(params)
+		}
+	})
+
+	parser.parse()
+	return vehicles
+
+
+}
+
+
+
+Location.setAccuracyToTenMeters();
+const loc = await Location.current();
+// const distances = await boltVehicles(loc['latitude'], loc['longitude'])
+const distances = await nextBikeVehicles()
+
+console.log(distances)
 
 
 
