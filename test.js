@@ -32,3 +32,8 @@ req.addParameterToMultipart("session_id", "34730400u1656838818")
 req.addParameterToMultipart("version", "CI.59.0")
 req.addParameterToMultipart("user_id", "34730400")
 req.addParameterToMultipart("payment_method_type", "adyen")
+
+cosnole.log(req)
+
+let resp = await req.loadJJSON()
+console.log(resp)
