@@ -9,7 +9,7 @@ let headers = {
 	"connection": "keep-alive",
 	"accept": "*/*",
 	"user-agent": "Bolt/80052652 CFNetwork/1333.0.4 Darwin/21.5.0",
-	"accept-language": "en-GB,en;q=0.9"
+	"accept-language": "en-GB,en;q=0.9",
 	"authorization": "Basic " + creds.bolt,
 	"accept-encoding": "gzip, deflate, br"
 }
