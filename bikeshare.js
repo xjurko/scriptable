@@ -80,13 +80,14 @@ async function nextBikeVehicles() {
 	const resp = await req.loadString();
 	const parser = new XMLParser(resp)
 
-	parser.didStartElement((nodeName, params) => {
-		if (nodeName == 'bike') {
+	parser.didStartElement = (nodeName, params) => {
+		if (nodeName == 'place' && params['bikes'] > 0 && params['bikes_available_to_rent'] > 0) {
 			vehicles.append(params)
 		}
-	})
+	}
 
 	parser.parse()
+	vehicles.map(v => ({"v": v, "dist": distanceCrow(v["lat"], v["lng"])}))
 	return vehicles
 
 
