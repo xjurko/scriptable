@@ -1,5 +1,23 @@
 let creds = importModule("creds")
 
+
+function distanceCrow(latFrom, longFrom, latTo, longTo) = {
+	const R = 6371e3; // metres
+	const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+	const φ2 = lat2 * Math.PI/180;
+	const Δφ = (lat2-lat1) * Math.PI/180;
+	const Δλ = (lon2-lon1) * Math.PI/180;
+
+	const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+	          Math.cos(φ1) * Math.cos(φ2) *
+	          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+	const d = R * c; // in metres
+	return d
+}
+
+
 let headers = {
 	"host": "node.bolt.eu",
 	"cache-control": "no-cache",
@@ -24,6 +42,11 @@ console.log(req)
 
 let resp = await req.loadJSON()
 
-vehicles = resp["data"]["categories"].flatMap(cat => cat["vehicles"])
+let latFrom = 49.20053758427728
+let longfrom = 16.595202877658718
 
-console.log(vehicles)
+let vehicles = resp["data"]["categories"].flatMap(cat => cat["vehicles"])
+let distances = vehicles.map(v => distanceCrow(latFrom, longfrom, v["lat"], v["lng"])) 
+
+console.log(distances)
+
