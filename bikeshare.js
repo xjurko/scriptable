@@ -54,7 +54,7 @@ async function boltVehicles(lat, lon) {
 }
 
 
-async function nextBikeVehicles() {
+async function nextBikeVehicles(lat, lon) {
 
 	const headers = {
 		"host": "api.nextbike.net",
@@ -82,13 +82,13 @@ async function nextBikeVehicles() {
 
 	parser.didStartElement = (nodeName, params) => {
 		if (nodeName == 'place' && params['bikes'] > 0 && params['bikes_available_to_rent'] > 0) {
-			vehicles.append(params)
+			vehicles.push(params)
 		}
 	}
 
 	parser.parse()
-	vehicles.map(v => ({"v": v, "dist": distanceCrow(v["lat"], v["lng"])}))
-	return vehicles
+	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["lat"], v["lng"])})) ;
+	return distances
 
 
 }
@@ -98,7 +98,7 @@ async function nextBikeVehicles() {
 Location.setAccuracyToTenMeters();
 const loc = await Location.current();
 // const distances = await boltVehicles(loc['latitude'], loc['longitude'])
-const distances = await nextBikeVehicles()
+const distances = await nextBikeVehicles(loc['latitude'], loc['longitude'])
 
 console.log(distances)
 
