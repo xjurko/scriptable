@@ -14,11 +14,11 @@ function distanceCrow(latFrom, longFrom, latTo, longTo) {
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
 	const d = R * c; // in metres
-	return Math.round(d)
-}
+	return Math.round(d);
+};
 
 
-function boltVehicles(lat, lon) {
+async function boltVehicles(lat, lon) {
 
 	const headers = {
 		"host": "node.bolt.eu",
@@ -32,7 +32,7 @@ function boltVehicles(lat, lon) {
 	};
 
 
-	const url = `https://node.bolt.eu/rental-search/categoriesOverview?country=sk&gps_lat=${lat}}8&gps_lng=${lon}&device_os_version=iOS15.5&deviceId=60E3650B-071D-4DDA-AB99-EA22285B8F63&select_all=true&deviceType=iphone&lat=${lat}&language=en-GB&lng=${lon}&payment_method_id=PML6JXBPJ9C29X42&device_name=iPhone14,4&session_id=34730400u1656838818&version=CI.59.0&user_id=34730400&payment_method_type=adyen`;
+	const url = `https://node.bolt.eu/rental-search/categoriesOverview?country=sk&gps_lat=${lat}&gps_lng=${lon}&device_os_version=iOS15.5&deviceId=60E3650B-071D-4DDA-AB99-EA22285B8F63&select_all=true&deviceType=iphone&lat=${lat}&language=en-GB&lng=${lon}&payment_method_id=PML6JXBPJ9C29X42&device_name=iPhone14,4&session_id=34730400u1656838818&version=CI.59.0&user_id=34730400&payment_method_type=adyen`;
 
 	console.log(url);
 
