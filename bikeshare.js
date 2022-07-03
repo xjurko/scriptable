@@ -48,7 +48,7 @@ async function boltVehicles(lat, lon) {
 	const vehicles = resp["data"]["categories"].flatMap(cat => cat["vehicles"]);
 	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["lat"], v["lng"])})) ;
 
-	distances.sort((a,b) => a["dist"] < b["dist"])
+	distances.sort((a,b) => a["dist"] > b["dist"])
 	console.log(distances);
 	return distances;
 }
@@ -88,7 +88,7 @@ async function nextBikeVehicles(lat, lon) {
 
 	parser.parse()
 	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["lat"], v["lng"])}));
-	distances.sort((a,b) => a["dist"] < b["dist"])
+	distances.sort((a,b) => a["dist"] > b["dist"])
 	return distances
 
 
