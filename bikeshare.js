@@ -140,14 +140,16 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 	const date = new Date()
 
 	if (enableWalkTimes) {
-		const [boltRealDist,boltWalkTime] = (await getTripInfo(distancesBolt[0]["v"]["lat"], distancesBolt[0]["v"]["lng"])).split("|")
+		const [boltRealDist,boltWalkTime] = (await getTripInfo(distancesBolt[0]["v"]["lat"], distancesBolt[0]["v"]["lng"]))["result"].split("|")
+		const [rekolaRealDist,rekolaWalkTime] = (await getTripInfo(distancesRekola[0]["v"]["position"]["lat"], distancesBolt[0]["v"]["position"]["lng"]))["result"].split("|")
+		const [nbRealDist,nbWalkTime] = (await getTripInfo(distancesNextBike[0]["v"]["lat"], distancesNextBike[0]["v"]["lng"]))["result"].split("|")
 
 		console.log(boltRealDist)
 		console.log(boltWalkTime)
 
 		const t1 = listwidget.addText(`Bolt: ${boltRealDist}/ ${boltWalkTime}`)
-		const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
-		const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
+		const t2 = listwidget.addText(`NextBike: ${nbRealDist}/ ${nbWalkTime}`)
+		const t3 = listwidget.addText(`Rekola: ${rekolaRealDist}/ ${rekolaWalkTime}`)
 		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
 	}
 	else {
