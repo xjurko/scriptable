@@ -120,8 +120,8 @@ async function rekolaVehicles(lat, lon) {
 
 
 	
-	const resp = await req.loadString();
-	const vehicles = resp["racks"].flatMap(x => x["vehicles"]) + resp["vehicles"]
+	const resp = await req.loadJSON();
+	const vehicles = resp["racks"].flatMap(x => x["vehicles"]).concat(resp["vehicles"])
 
 
 	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["position"]["lat"], v["position"]["lng"])}));
@@ -174,7 +174,7 @@ try {
 		console.log(distancesBolt[0])
 		console.log(distancesNextBike[0])
 		widget.presentSmall()
-		App.close()
+		// App.close()
 	}
 }
 catch {}
