@@ -104,7 +104,7 @@ async function createWidget(distancesBolt, distancesNextBike) {
   const date = new Date()
   const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
   const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
-  const t3 = listwidget.addText(`Updated: ${date.getHour()}:${date.getMinute()}`)
+  const t3 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
 
   // Return the created widget
   return listwidget;
