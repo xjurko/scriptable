@@ -85,43 +85,99 @@ async function nextBikeVehicles(lat, lon) {
 	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["lat"], v["lng"])}));
 	distances.sort((a,b) => a["dist"] > b["dist"])
 	return distances
+}
 
 
+async function rekolaVehicles(lat, lon) {
+	const headers = {
+		"host":"mobile.rekola.cz",
+		"accept":"*/*",
+		"screen-ppi":"326",
+		"x-device-name":"iPhone14,4",
+		"x-lock-device-version":"6",
+		"accept-encoding":"gzip",
+		"x-api-key": creds.rekola,
+		"x-api-version":"6",
+		"accept-language":"en-SK;q=1.0",
+		"screen-width":"1080.0",
+		"x-last-request-hash":"0",
+		"x-device-id":creds.rekolaDeviceId,
+		"screen-height":"2340.0",
+		"user-agent":"Rekola/7.4.2 (cz.clevis.rekola; build:1226; iOS 15.5.0) Alamofire/5.5.0",
+		"connection":"keep-alive",
+		"x-client":"ios 7.4.2 (1226)",
+		"x-client-os":"iOS 15.5"
+	};
+
+
+	const url = `https://mobile.rekola.cz/api/mobile/regions/2/trackables?gpsAcc=10&gpsLat=${lat}&gpsLng=${lon}&mapLat=${lat}&mapLng=${lon}&mapZoom=15`;
+
+	console.log(url);
+
+
+	const req = new Request(url);
+	req.headers = headers;
+
+
+	
+	const resp = await req.loadString();
+	const vehicles = resp["racks"].flatMap(x => x["vehicles"]) + resp["vehicles"]
+
+
+	const distances = vehicles.map(v => ({"v": v, "dist": distanceCrow(lat, lon, v["position"]["lat"], v["position"]["lng"])}));
+	distances.sort((a,b) => a["dist"] > b["dist"])
+	return distances	
 }
 
 
 
-Location.setAccuracyToTenMeters();
-const loc = await Location.current();
-const distancesNextBike = await nextBikeVehicles(loc['latitude'], loc['longitude'])
-const distancesBolt = await boltVehicles(loc['latitude'], loc['longitude'])
+async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
+	const bgColor = new Color("#222222")
+	let listwidget = new ListWidget();	
+	listwidget.spacing = 2
+	const date = new Date()
+	const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
+	const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
+	const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
+	const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
 
-
-async function createWidget(distancesBolt, distancesNextBike) {
-  const bgColor = new Color("#222222")
-  let listwidget = new ListWidget();
-  listwidget.spacing = 2
-  const date = new Date()
-  const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
-  const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
-  const t3 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
-
-  // Return the created widget
-  return listwidget;
+	// Return the created widget
+	return listwidget;
 }
 
-const widget = await createWidget(distancesBolt, distancesNextBike)
+
+async function getTripInfo(lat, lon) {
+	const SHORTCUTNAME = "wt";
+	const XCBURL =  "shortcuts://x-callback-url/run-shortcut"
+	let cb = new CallbackURL(XCBURL);
+	cb.addParameter("name", SHORTCUTNAME);
+	cb.addParameter("input", `${lat},${lon}`);
+	return await cb.open();
+}
 
 
-if (config.runsInWidget) {
-	Script.setWidget(widget);
+try {
+	Location.setAccuracyToTenMeters();
+	const loc = await Location.current();
+	const distancesNextBike = await nextBikeVehicles(loc['latitude'], loc['longitude'])
+	const distancesBolt = await boltVehicles(loc['latitude'], loc['longitude'])
+	const distancesRekola = await rekolaVehicles(loc['latitude'], loc['longitude'])
+
+
+	const widget = await createWidget(distancesBolt, distancesNextBike, distancesRekola)
+
+
+	if (config.runsInWidget) {
+		Script.setWidget(widget);
+	}
+	else {
+		console.log(distancesBolt[0])
+		console.log(distancesNextBike[0])
+		widget.presentSmall()
+		App.close()
+	}
 }
-else {
-	console.log(distancesBolt[0])
-	console.log(distancesNextBike[0])
-	widget.presentSmall()
-	App.close()
-}
+catch {}
 
 Script.complete()
 
