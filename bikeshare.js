@@ -140,8 +140,10 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 	const date = new Date()
 
 	if (enableWalkTimes) {
-		const boltRealDist,boltWalkTime = (await getTripInfo(distancesBolt[0]["v"]["position"]["lat"], distancesBolt[0]["v"]["position"]["lng"])).split("|")
+		const [boltRealDist,boltWalkTime] = (await getTripInfo(distancesBolt[0]["v"]["lat"], distancesBolt[0]["v"]["lng"])).split("|")
 
+		console.log(boltRealDist)
+		console.log(boltWalkTime)
 
 		const t1 = listwidget.addText(`Bolt: ${boltRealDist}/ ${boltWalkTime}`)
 		const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
@@ -172,28 +174,25 @@ async function getTripInfo(lat, lon) {
 }
 
 
-try {
-	Location.setAccuracyToTenMeters();
-	const loc = await Location.current();
-	const distancesNextBike = await nextBikeVehicles(loc['latitude'], loc['longitude'])
-	const distancesBolt = await boltVehicles(loc['latitude'], loc['longitude'])
-	const distancesRekola = await rekolaVehicles(loc['latitude'], loc['longitude'])
+Location.setAccuracyToTenMeters();
+const loc = await Location.current();
+const distancesNextBike = await nextBikeVehicles(loc['latitude'], loc['longitude'])
+const distancesBolt = await boltVehicles(loc['latitude'], loc['longitude'])
+const distancesRekola = await rekolaVehicles(loc['latitude'], loc['longitude'])
 
 
-	const widget = await createWidget(distancesBolt, distancesNextBike, distancesRekola)
+const widget = await createWidget(distancesBolt, distancesNextBike, distancesRekola)
 
 
-	if (config.runsInWidget) {
-		Script.setWidget(widget);
-	}
-	else {
-		console.log(distancesBolt[0])
-		console.log(distancesNextBike[0])
-		widget.presentSmall()
-		// App.close()
-	}
+if (config.runsInWidget) {
+	Script.setWidget(widget);
 }
-catch {}
+else {
+	console.log(distancesBolt[0])
+	console.log(distancesNextBike[0])
+	widget.presentSmall()
+	// App.close()
+}
 
 Script.complete()
 
