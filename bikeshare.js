@@ -141,7 +141,7 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 
 	if (enableWalkTimes) {
 		const [boltRealDist,boltWalkTime] = (await getTripInfo(distancesBolt[0]["v"]["lat"], distancesBolt[0]["v"]["lng"]))["result"].split("|")
-		const [rekolaRealDist,rekolaWalkTime] = (await getTripInfo(distancesRekola[0]["v"]["position"]["lat"], distancesBolt[0]["v"]["position"]["lng"]))["result"].split("|")
+		const [rekolaRealDist,rekolaWalkTime] = (await getTripInfo(distancesRekola[0]["v"]["position"]["lat"], distancesRekola[0]["v"]["position"]["lng"]))["result"].split("|")
 		const [nbRealDist,nbWalkTime] = (await getTripInfo(distancesNextBike[0]["v"]["lat"], distancesNextBike[0]["v"]["lng"]))["result"].split("|")
 
 		console.log(boltRealDist)
