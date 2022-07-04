@@ -101,21 +101,25 @@ async function createWidget(distancesBolt, distancesNextBike) {
   const bgColor = new Color("#222222")
   let listwidget = new ListWidget();
   listwidget.spacing = 2
+  const date = new Date()
   const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
   const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
+  const t3 = listwidget.addText(`Updated: ${date.getHour()}:${date.getMinute()}`)
 
   // Return the created widget
   return listwidget;
 }
 
+const widget = createWidget(distancesBolt, distancesNextBike)
+
 
 if (config.runsInWidget) {
-	widget = createWidget()
 	Script.setWidget(widget);
 else {
 	console.log(distancesBolt[0])
 	console.log(distancesNextBike[0])
 	widget.presentSmall()
+	App.close()
 }
 
 Script.complete()
