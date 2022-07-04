@@ -1,6 +1,8 @@
 let creds = importModule("creds")
 
 
+const enableWalkTimes = true
+
 function distanceCrow(latFrom, longFrom, latTo, longTo) {
 	const R = 6371e3; // metres
 	const φ1 = latFrom * Math.PI/180; // φ, λ in radians
@@ -136,10 +138,24 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 	let listwidget = new ListWidget();	
 	listwidget.spacing = 2
 	const date = new Date()
-	const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
-	const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
-	const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
-	const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
+
+	if (enableWalkTimes) {
+		const boltRealDist,boltWalkTime = (await getTripInfo(distancesBolt[0]["v"]["position"]["lat"], distancesBolt[0]["v"]["position"]["lng"])).split("|")
+
+
+		const t1 = listwidget.addText(`Bolt: ${boltRealDist}/ ${boltWalkTime}`)
+		const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
+		const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
+		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
+	}
+	else {
+
+		const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
+		const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
+		const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
+		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
+
+	}
 
 	// Return the created widget
 	return listwidget;
