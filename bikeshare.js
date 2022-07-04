@@ -1,7 +1,12 @@
 let creds = importModule("creds")
 
 
-const enableWalkTimes = true
+let enableWalkTimes = true
+
+if (config.runsInWidget) {
+	enableWalkTimes = false
+}
+
 
 function distanceCrow(latFrom, longFrom, latTo, longTo) {
 	const R = 6371e3; // metres
