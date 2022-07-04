@@ -110,11 +110,12 @@ async function createWidget(distancesBolt, distancesNextBike) {
   return listwidget;
 }
 
-const widget = createWidget(distancesBolt, distancesNextBike)
+const widget = await createWidget(distancesBolt, distancesNextBike)
 
 
 if (config.runsInWidget) {
 	Script.setWidget(widget);
+}
 else {
 	console.log(distancesBolt[0])
 	console.log(distancesNextBike[0])
