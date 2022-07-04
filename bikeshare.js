@@ -147,9 +147,9 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 		console.log(boltRealDist)
 		console.log(boltWalkTime)
 
-		const t1 = listwidget.addText(`Bolt: ${boltRealDist}/ ${boltWalkTime}`)
-		const t2 = listwidget.addText(`NextBike: ${nbRealDist}/ ${nbWalkTime}`)
-		const t3 = listwidget.addText(`Rekola: ${rekolaRealDist}/ ${rekolaWalkTime}`)
+		const t1 = listwidget.addText(`Bolt: ${boltRealDist} / ${boltWalkTime}`)
+		const t2 = listwidget.addText(`NextBike: ${nbRealDist} / ${nbWalkTime}`)
+		const t3 = listwidget.addText(`Rekola: ${rekolaRealDist} / ${rekolaWalkTime}`)
 		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
 	}
 	else {
