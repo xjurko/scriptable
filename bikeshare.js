@@ -156,13 +156,15 @@ async function createWidget(distancesBolt, distancesNextBike, distancesRekola) {
 		const t2 = listwidget.addText(`NextBike: ${nbRealDist} / ${nbWalkTime}`)
 		const t3 = listwidget.addText(`Rekola: ${rekolaRealDist} / ${rekolaWalkTime}`)
 		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
-	}
+		}
 	else {
 
 		const t1 = listwidget.addText(`Bolt: ${distancesBolt[0]["dist"]}m`)
 		const t2 = listwidget.addText(`NextBike: ${distancesNextBike[0]["dist"]}m`)
 		const t3 = listwidget.addText(`Rekola: ${distancesRekola[0]["dist"]}m`)
 		const t4 = listwidget.addText(`Updated: ${date.getHours()}:${date.getMinutes()}`)
+		const t5 = listwidget.addDate(date)
+		t5.applyRelativeStyle()
 
 	}
 
